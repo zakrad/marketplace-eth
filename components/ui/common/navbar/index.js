@@ -51,7 +51,7 @@ export default function Navbar() {
                                         </Button> :
                                         <Button
                                             onClick={() => window.open("https://metamask.io/download.html", "_blank")}>
-                                            Install Metamask!
+                                            Install Metamask
                                         </Button>
                             }
                         </div>
