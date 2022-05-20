@@ -1,11 +1,11 @@
 import { useWeb3 } from "@components/providers"
 import Link from "next/link"
 import { Button } from "@components/ui/common"
-import { useAccount } from "@components/hooks/web3/useAccount"
+import { useAccount } from "@components/hooks/web3"
 import { useRouter } from "next/router"
 
 
-export default function Navbar() {
+export default function Footer() {
     const { connect, isLoading, isWeb3Loaded } = useWeb3()
     const { account } = useAccount()
     const { pathname } = useRouter()
@@ -15,19 +15,19 @@ export default function Navbar() {
                 <nav className="relative" aria-label="Global">
                     <div className="flex justify-between items-center">
                         <div>
-                            <Link href="/">
+                            <Link href="/" >
                                 <a
                                     className="font-medium mr-8 text-gray-500 hover:text-gray-900">
                                     Home
                                 </a>
                             </Link>
-                            <Link href="/marketplace">
+                            <Link href="/marketplace" >
                                 <a
                                     className="font-medium mr-8 text-gray-500 hover:text-gray-900">
                                     Marketplace
                                 </a>
                             </Link>
-                            <Link href="/blogs">
+                            <Link href="/" >
                                 <a
                                     className="font-medium mr-8 text-gray-500 hover:text-gray-900">
                                     Blogs
@@ -35,34 +35,33 @@ export default function Navbar() {
                             </Link>
                         </div>
                         <div>
-                            <Link href="/wishlist">
+                            <Link href="/" >
                                 <a
                                     className="font-medium mr-8 text-gray-500 hover:text-gray-900">
                                     Wishlist
                                 </a>
                             </Link>
-                            {
-                                isLoading ?
-                                    <Button
-                                        disabled={true}
-                                        onClick={connect}>
-                                        Loading...
-                                    </Button> :
-                                    isWeb3Loaded ?
-                                        account.data ?
-                                            <Button
-                                                hoverable={false}
-                                                className="cursor-default">
-                                                Hi there {account.isAdmin && "Admin"}
-                                            </Button> :
-                                            <Button
-                                                onClick={connect}>
-                                                Connect
-                                            </Button> :
+                            {isLoading ?
+                                <Button
+                                    disabled={true}
+                                    onClick={connect}>
+                                    Loading...
+                                </Button> :
+                                isWeb3Loaded ?
+                                    account.data ?
                                         <Button
-                                            onClick={() => window.open("https://metamask.io/download.html", "_blank")}>
-                                            Install Metamask
-                                        </Button>
+                                            hoverable={false}
+                                            className="cursor-default">
+                                            Hi there {account.isAdmin && "Admin"}
+                                        </Button> :
+                                        <Button
+                                            onClick={connect}>
+                                            Connect
+                                        </Button> :
+                                    <Button
+                                        onClick={() => window.open("https://metamask.io/download.html", "_blank")}>
+                                        Install Metamask
+                                    </Button>
                             }
                         </div>
                     </div>
