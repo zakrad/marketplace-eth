@@ -1,18 +1,27 @@
-import { useEffect, useState } from "react"
+import useSWR from "swr"
+import { useEffect } from "react"
 
 
 
-export const handler = web3 => () => {
-    const [account, setAccount] = useState(null)
+export const handler = (web3, provider) => () => {
+    const { mutate, ...rest } = useSWR(() =>
+        web3 ? "web3/accounts" : null
+        ,
+        async () => {
+            const accounts = await web3.eth.getAccounts()
+            return accounts[0]
+        }
+    )
+
 
     useEffect(() => {
-        const getAccount = async () => {
-            const accounts = await web3.eth.getAccounts()
-            setAccount(accounts[0])
-        }
+        provider &&
+            provider.on("accountsChanged",
+                accounts => mutate(accounts[0] ?? null))
+    }, [provider])
 
-        web3 && getAccount()
-    }, [web3])
 
-    return { account }
+    return {
+        account: { mutate, ...rest }
+    }
 }
