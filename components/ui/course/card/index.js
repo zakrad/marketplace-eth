@@ -4,7 +4,7 @@ import Link from "next/link"
 
 
 
-export default function Card({ course }) {
+export default function Card({ course, Footer }) {
 
     return (
         <div
@@ -35,6 +35,9 @@ export default function Card({ course }) {
                         className="mt-2 text-gray-500">
                         {course.description}
                     </p>
+                    {
+                        Footer && <Footer />
+                    }
                 </div>
             </div>
         </div>
