@@ -31,7 +31,7 @@ export default function Marketplace({ courses }) {
                         Footer={() =>
                             <div className="mt-4">
                                 <Button variant="lightPurple">
-                                    Purchase
+                                    Purchase 
                                 </Button>
                             </div>
                         } />
