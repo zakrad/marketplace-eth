@@ -14,7 +14,7 @@ export default function Card({ course, Footer }) {
                         className="object-cover"
                         src={course.coverImage}
                         layout="responsive"
-                        width="175"
+                        width="170"
                         height="230"
                         alt={course.title}
                     />

@@ -8,4 +8,5 @@
 
 .next-image-wrapper > span {
   height: 100%;
+  position: relative;
 }

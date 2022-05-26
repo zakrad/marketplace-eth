@@ -3,7 +3,7 @@ import { BaseLayout } from "@components/ui/layout"
 import { getAllCourses } from "@content/courses/fetcher"
 import { WalletBar } from "@components/ui/web3"
 import { useAccount, useNetwork } from "@components/hooks/web3"
-import { Button } from "@components/ui/common"
+import { Button, Modal } from "@components/ui/common"
 
 
 export default function Marketplace({ courses }) {
@@ -31,12 +31,13 @@ export default function Marketplace({ courses }) {
                         Footer={() =>
                             <div className="mt-4">
                                 <Button variant="lightPurple">
-                                    Purchase 
+                                    Purchase
                                 </Button>
                             </div>
                         } />
                 }
             </CourseList>
+            <Modal isOpen={true} />
         </>
     )
 }
