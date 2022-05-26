@@ -3,7 +3,7 @@
 
 
 
-export default function Card() {
+export default function OwnedCourseCard() {
 
     return (
         <div className="bg-white shadow overflow-hidden sm:rounded-lg mb-3">
