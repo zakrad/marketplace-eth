@@ -3,7 +3,6 @@ import Link from "next/link"
 
 
 
-
 export default function Card({ course, Footer }) {
 
     return (
@@ -15,7 +14,7 @@ export default function Card({ course, Footer }) {
                         className="object-cover"
                         src={course.coverImage}
                         layout="responsive"
-                        width="200"
+                        width="175"
                         height="230"
                         alt={course.title}
                     />

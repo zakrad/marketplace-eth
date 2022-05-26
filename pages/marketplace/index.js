@@ -51,5 +51,3 @@ export function getStaticProps() {
 }
 
 Marketplace.Layout = BaseLayout
-
-//
