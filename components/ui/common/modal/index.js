@@ -9,7 +9,7 @@ export default function Modal({ isOpen, children }) {
                     {/* Adds Gray BG */}
                     {
                         isOpen &&
-                        <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" ariaHidden="true"></div>
+                        <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-h idden="true"></div>
                     }
 
                     <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
