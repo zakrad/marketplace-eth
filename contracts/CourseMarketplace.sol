@@ -17,17 +17,32 @@ struct Course {
     State state; //1
 } 
 
+//mapping courseHash to course Data
+mapping(bytes32 => Course) private ownedCourses;
+// mapping of course Id to course Hash
+mapping(uint => bytes32) private ownedCourseHash;
+
+//number of all courses + id of course
+uint private totalOwnedCourse;
+
 function purchaseCourse (
-    bytes16 courseId,
-    bytes32 proof
+    bytes16 courseId,  // 0x00000000000000000000000000003130
+    bytes32 proof,  // 0x0000000000000000000000000000313000000000000000000000000000003130
 )
 external
 payable
-returns(bytes32)
 { 
     bytes32 courseHash = keccak256(abi.encodePacked(courseId, msg.sender));
-    return courseHash;
+    uint id = totalOwnedCourses++;
 
+    ownedCourseHash[id] = courseHash;
+    ownedCourses[courseHash] = Course({
+         id: id,
+         price: msg.value,         
+         proof: proof,
+         owner: msg.sender,
+         state: State.Purchased
+    });
 }
 
 }
