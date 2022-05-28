@@ -25,6 +25,9 @@ mapping(uint => bytes32) private ownedCourseHash;
 //number of all courses + id of course
 uint private totalOwnedCourses;
 
+/// Course has already a owner! 
+error CourseHasOwner();
+
 function purchaseCourse (
     bytes16 courseId,  // 0x00000000000000000000000000003130
     bytes32 proof  // 0x0000000000000000000000000000313000000000000000000000000000003130
@@ -33,6 +36,11 @@ external
 payable
 { 
     bytes32 courseHash = keccak256(abi.encodePacked(courseId, msg.sender));
+
+    if(hasCourseOwnership(courseHash)){
+        revert CourseHasOwner();
+    }
+
     uint id = totalOwnedCourses++;
 
     ownedCourseHash[id] = courseHash;
@@ -68,4 +76,14 @@ returns(Course memory)
 {
     return ownedCourses[courseHash];
 }
+
+function hasCourseOwnership(bytes32 courseHash)
+private
+view
+returns(bool)
+{
+    return ownedCourses[courseHash].owner == msg.sender;
+}
+
+
 }
