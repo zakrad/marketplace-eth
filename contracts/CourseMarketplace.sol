@@ -24,14 +24,23 @@ mapping(uint => bytes32) private ownedCourseHash;
 
 //number of all courses + id of course
 uint private totalOwnedCourses;
-
 address payable private owner;
 
 constructor(){
     setContractOwner(msg.sender);
 }
+
 /// Course has already a owner! 
 error CourseHasOwner();
+/// only owner has an access!
+error OnlyOwner();
+
+modifier onlyOwner(){
+    if(msg.sender != getContractOwner()){
+        revert OnlyOwner();
+    }
+    _;
+}
 
 function purchaseCourse (
     bytes16 courseId,  // 0x00000000000000000000000000003130
@@ -58,6 +67,13 @@ payable
     });
 }
 
+function transferOwnership(address newOwner)
+external 
+onlyOwner
+{
+setContractOwner(newOwner);
+}
+
 function getCourseCount()
 external
 view
@@ -81,6 +97,15 @@ returns(Course memory)
 {
     return ownedCourses[courseHash];
 }
+
+function getContractOwner()
+public
+view
+returns(address)
+{
+return owner;
+}
+
 
 function setContractOwner(address newOwner) private {
     owner = payable(newOwner);
