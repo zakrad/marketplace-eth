@@ -23,11 +23,11 @@ mapping(bytes32 => Course) private ownedCourses;
 mapping(uint => bytes32) private ownedCourseHash;
 
 //number of all courses + id of course
-uint private totalOwnedCourse;
+uint private totalOwnedCourses;
 
 function purchaseCourse (
     bytes16 courseId,  // 0x00000000000000000000000000003130
-    bytes32 proof,  // 0x0000000000000000000000000000313000000000000000000000000000003130
+    bytes32 proof  // 0x0000000000000000000000000000313000000000000000000000000000003130
 )
 external
 payable
@@ -45,4 +45,27 @@ payable
     });
 }
 
+function getCourseCount()
+external
+view
+returns(uint)
+{
+return totalOwnedCourses;
+}
+
+function getCourseHashAtIndex(uint index)
+external 
+view
+returns(bytes32)
+{
+    return ownedCourseHash[index];
+}
+
+function getCourseByHash(bytes32 courseHash)
+external 
+view
+returns(Course memory)
+{
+    return ownedCourses[courseHash];
+}
 }
