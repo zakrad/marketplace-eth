@@ -21,7 +21,7 @@ export default function Web3Provider({ children }) {
             const provider = await detectEthereumProvider(web3Context)
             if (provider) {
                 const web3 = new Web3(provider)
-                const contract = await loadContract("CourseMarketplace", provider)
+                const contract = await loadContract("CourseMarketplace", web3)
 
                 setWeb3Api({
                     provider,
