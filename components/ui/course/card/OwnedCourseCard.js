@@ -20,7 +20,7 @@ export default function OwnedCourseCard({ children, course }) {
                             className="object-cover"
                             src={course.coverImage}
                             width="45"
-                            height="55"
+                            height="65"
                             layout="responsive"
                         />
                     </div>
