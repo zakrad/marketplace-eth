@@ -31,4 +31,3 @@ export const handler = (web3, contract) => (courses, account) => {
     )
     return swrRes
 }
-// UPTODATE
