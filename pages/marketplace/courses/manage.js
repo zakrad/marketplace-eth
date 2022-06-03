@@ -1,3 +1,4 @@
+import { useAccount, useManagedCourses } from "@components/hooks/web3";
 import { Button } from "@components/ui/common";
 import { CourseFilter, OwnedCourseCard } from "@components/ui/course";
 import { BaseLayout } from "@components/ui/layout";
@@ -6,7 +7,8 @@ import { MarketHeader } from "@components/ui/marketplace";
 
 
 export default function ManageCourses() {
-
+    const { account } = useAccount()
+    const { managedCourses } = useManagedCourses(account.data)
 
     return (
         <>
