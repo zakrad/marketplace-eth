@@ -10,10 +10,10 @@ export default function ManageCourses() {
 
     return (
         <>
-                <MarketHeader />
-                <CourseFilter />
+            <MarketHeader />
+            <CourseFilter />
             <section className="grid grid-cols-1">
-                <OwnedCourseCard>
+                {/* <OwnedCourseCard>
                     <div className="flex mr-2 relative rounded-md">
                         <input
                             type="text"
@@ -25,7 +25,7 @@ export default function ManageCourses() {
                             Verify
                         </Button>
                     </div>
-                </OwnedCourseCard>
+                </OwnedCourseCard> */}
             </section>
 
         </>
