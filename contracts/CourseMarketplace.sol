@@ -30,6 +30,10 @@ constructor(){
     setContractOwner(msg.sender);
 }
 
+/// Course is not created!
+error CourseIsNotCreated();
+/// Course has invalid state!
+error InvalidState();
 /// Course has already a owner! 
 error CourseHasOwner();
 /// only owner has an access!
@@ -65,6 +69,22 @@ payable
          owner: msg.sender,
          state: State.Purchased
     });
+}
+
+function activateCourse(bytes32 courseHash)
+external
+onlyOwner
+{
+if(!isCourseCreated(courseHash)){
+    revert CourseIsNotCreated();
+}
+
+    Course storage course = ownedCourses[course];
+if(course.state != State.Purchased){
+    revert InvalidState();
+}
+
+    course.state = State.Activated;
 }
 
 function transferOwnership(address newOwner)
@@ -109,6 +129,14 @@ return owner;
 
 function setContractOwner(address newOwner) private {
     owner = payable(newOwner);
+}
+
+function isCourseCreated(bytes32 courseHash)
+    private
+    view
+    returns (bool)
+    {
+ return ownedCourses[courseHash].owner !== 0x0000000000000000000000000000000000000000;
 }
 
 function hasCourseOwnership(bytes32 courseHash)
