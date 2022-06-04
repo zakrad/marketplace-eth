@@ -5,7 +5,7 @@ export default function ManagedCourseCard({ children, course }) {
     const Item = ({ title, value, className }) => {
 
         return (
-            <div className={`${className} px-4 py-5 sm:grid sm:px-6`}>
+            <div className={`${className} px-4 py-2 sm:grid sm:px-6`}>
                 <div className="text-sm font-medium text-gray-500">
                     {title}
                 </div>
