@@ -1,3 +1,4 @@
+import { useAccount } from "@components/hooks/web3";
 import { Breadcrumbs } from "@components/ui/common";
 import { EthRates, WalletBar } from "@components/ui/web3";
 
@@ -6,6 +7,7 @@ import { EthRates, WalletBar } from "@components/ui/web3";
 
 
 export default function Header() {
+    const { account } = useAccount()
     const LINKS = [{
         href: "/marketplace",
         value: "Buy",
@@ -15,6 +17,7 @@ export default function Header() {
     }, {
         href: "/marketplace/courses/managed",
         value: "Manage Courses",
+        requireAdmin: true
     },
     ]
     return (
@@ -23,7 +26,9 @@ export default function Header() {
                 <WalletBar />
                 <EthRates />
                 <div className="flex flex-row-reverse p-4 sm:px-6 lg:px-8">
-                    <Breadcrumbs items={LINKS} />
+                    <Breadcrumbs
+                        isAdmin={account.isAdmin}
+                        items={LINKS} />
                 </div>
             </div>
         </>
