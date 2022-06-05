@@ -1,10 +1,15 @@
-const { createContext, useContext, useEffect, useState, useMemo } = require("react")
+const { createContext, useContext, useEffect, useState, useMemo } = require("react");
+
 import detectEthereumProvider from "@metamask/detect-provider";
 import { loadContract } from "@utils/loadContract";
 import Web3 from "web3";
 import { setupHooks } from "./hooks/setupHooks";
 
-const web3Context = createContext(null)
+const Web3Context = createContext(null)
+
+const setListeners = provider => {
+    provider.on("chainChanged", _ => window.location.reload())
+}
 
 const createWeb3State = ({ web3, provider, contract, isLoading }) => {
     return {
@@ -17,28 +22,40 @@ const createWeb3State = ({ web3, provider, contract, isLoading }) => {
 }
 
 export default function Web3Provider({ children }) {
-
-    const [web3Api, setWeb3Api] = useState(createWeb3State({ web3: null, provider: null, contract: null, isLoading: true }))
+    const [web3Api, setWeb3Api] = useState(
+        createWeb3State({
+            web3: null,
+            provider: null,
+            contract: null,
+            isLoading: true
+        })
+    )
 
     useEffect(() => {
         const loadProvider = async () => {
-            const provider = await detectEthereumProvider(web3Context)
+
+            const provider = await detectEthereumProvider()
             if (provider) {
                 const web3 = new Web3(provider)
                 const contract = await loadContract("CourseMarketplace", web3)
-                console.log(contract)
-                setWeb3Api(createWeb3State({
-                    web3, provider, contract, isLoading: false
-                }))
+
+                setListeners(provider)
+                setWeb3Api(
+                    createWeb3State({
+                        web3,
+                        provider,
+                        contract,
+                        isLoading: false
+                    })
+                )
             } else {
                 setWeb3Api(api => ({ ...api, isLoading: false }))
-                console.error("Please install Metamask")
+                console.error("Please, install Metamask.")
             }
         }
 
         loadProvider()
     }, [])
-
 
     const _web3Api = useMemo(() => {
         const { web3, provider, isLoading } = web3Api
@@ -49,29 +66,27 @@ export default function Web3Provider({ children }) {
                 async () => {
                     try {
                         await provider.request({ method: "eth_requestAccounts" })
-                    } catch (error) {
-                        console.error("Can't retreive account!")
+                    } catch {
                         location.reload()
                     }
                 } :
-                () => console.error("Can't connect to metamask, reload please")
+                () => console.error("Cannot connect to Metamask, try to reload your browser please.")
         }
     }, [web3Api])
 
     return (
-        <web3Context.Provider value={_web3Api}>
+        <Web3Context.Provider value={_web3Api}>
             {children}
-        </web3Context.Provider >
-
-
+        </Web3Context.Provider>
     )
 }
 
 export function useWeb3() {
-    return useContext(web3Context)
+    return useContext(Web3Context)
 }
 
 export function useHooks(cb) {
     const { hooks } = useWeb3()
     return cb(hooks)
 }
+
