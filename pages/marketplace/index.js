@@ -11,8 +11,8 @@ import { useWeb3 } from "@components/providers"
 export default function Marketplace({ courses }) {
     const { web3, contract, requireInstall } = useWeb3()
     const [selectedCourse, setSelectedCourse] = useState(null)
-    const { hasConnectedWallet, isConnecting, account } = useWalletInfo()
-    const { ownedCourses } = useOwnedCourses(courses, account.data)
+    const { hasConnectedWallet, network, isConnecting, account } = useWalletInfo()
+    const { ownedCourses } = useOwnedCourses(courses, account.data, network.data)
 
     const purchaseCourse = async order => {
 

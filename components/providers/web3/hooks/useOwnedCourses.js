@@ -5,9 +5,13 @@ import useSWR from "swr";
 
 
 
-export const handler = (web3, contract) => (courses, account) => {
+export const handler = (web3, contract) => (courses, account, network) => {
     const swrRes = useSWR(() =>
-        (web3 && contract && account) ? `web3/ownedCourses/${account}` : null,
+        (
+            web3 &&
+            contract &&
+            account &&
+            network) ? `web3/ownedCourses/${account}/${network}` : null,
         async () => {
             const ownedCourses = []
             for (let i = 0; i < courses.length; i++) {
