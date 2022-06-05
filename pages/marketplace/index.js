@@ -5,7 +5,7 @@ import { useOwnedCourses, useWalletInfo } from "@components/hooks/web3"
 import { OrderModal } from "@components/ui/order"
 import { useState } from "react"
 import { MarketHeader } from "@components/ui/marketplace"
-import { Button, Loader } from "@components/ui/common"
+import { Button, Loader, Message } from "@components/ui/common"
 import { useWeb3 } from "@components/providers"
 
 export default function Marketplace({ courses }) {
@@ -76,26 +76,41 @@ export default function Marketplace({ courses }) {
                             }
                             if (!ownedCourses.hasInitialResponse) {
                                 return (
-                                    <div style={{ height: "50px" }}></div>
-                                    // <Button
-                                    //     variant="lightPurple"
-                                    //     disabled={true}
-                                    // >
-                                    //     Loading State
-                                    // </Button>
-
+                                    <div style={{ height: "50px" }} />
                                 )
                             }
                             const owned = ownedCourses.lookup[course.id]
 
                             if (owned) {
                                 return (
-                                    <Button
-                                        variant="green"
-                                        disabled={true}
-                                    >
-                                        Owned
-                                    </Button>
+                                    <>
+                                        <Button
+                                            variant="green"
+                                            disabled={true}
+                                        >
+                                            Owned
+                                        </Button>
+                                        <div className="mt-1">
+                                            {
+                                                owned.state === "activated" &&
+                                                <Message size="sm">
+                                                    Activated
+                                                </Message>
+                                            }
+                                            {
+                                                owned.state === "deactivated" &&
+                                                <Message type="danger" size="sm">
+                                                    Deactivated
+                                                </Message>
+                                            }
+                                            {
+                                                owned.state === "purchased" &&
+                                                <Message type="warning" size="sm">
+                                                    Waiting for activation
+                                                </Message>
+                                            }
+                                        </div>
+                                    </>
                                 )
                             }
 
