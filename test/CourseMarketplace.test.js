@@ -34,6 +34,13 @@ contract("CourseMarketplace", accounts => {
             })
         })
 
+        it("should not allow repurchase already owned course by buyer", async () => {
+            await catchRevert(_contract.purchaseCourse(courseId, proof, {
+                from: buyer,
+                value
+            }))
+        })
+
         it("should not allow to repurchase already owned course", async () => {
             await catchRevert(_contract.purchaseCourse(courseId, proof, {
                 from: buyer,
