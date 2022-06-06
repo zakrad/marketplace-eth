@@ -60,6 +60,7 @@ export default function Marketplace({ courses }) {
                                 if (requireInstall) {
                                     return (
                                         <Button
+                                            size="sm"
                                             variant="lightPurple"
                                             disabled={true}
                                         >
@@ -70,6 +71,7 @@ export default function Marketplace({ courses }) {
                                 if (isConnecting) {
                                     return (
                                         <Button
+                                            size="sm"
                                             variant="lightPurple"
                                             disabled={true}
                                         >
@@ -89,6 +91,7 @@ export default function Marketplace({ courses }) {
                                         <>
                                             <div>
                                                 <Button
+                                                    size="sm"
                                                     variant="green"
                                                     disabled={true}
                                                 >
@@ -97,6 +100,7 @@ export default function Marketplace({ courses }) {
                                                 {
                                                     owned.state === "deactivated" &&
                                                     <Button
+                                                        size="sm"
                                                         onClick={() => { alert("Reactivating") }}
                                                         variant="purple"
                                                         disabled={false}
@@ -112,6 +116,7 @@ export default function Marketplace({ courses }) {
 
                                 return (
                                     <Button
+                                        size="sm"
                                         variant="lightPurple"
                                         onClick={() => setSelectedCourse(course)}
                                         disabled={!hasConnectedWallet}
