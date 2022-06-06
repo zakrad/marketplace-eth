@@ -5,7 +5,7 @@ import { useOwnedCourses, useWalletInfo } from "@components/hooks/web3"
 import { OrderModal } from "@components/ui/order"
 import { useState } from "react"
 import { MarketHeader } from "@components/ui/marketplace"
-import { Button, Loader, Message } from "@components/ui/common"
+import { Button, Loader } from "@components/ui/common"
 import { useWeb3 } from "@components/providers"
 
 export default function Marketplace({ courses }) {
@@ -13,6 +13,8 @@ export default function Marketplace({ courses }) {
     const [selectedCourse, setSelectedCourse] = useState(null)
     const { hasConnectedWallet, isConnecting, account } = useWalletInfo()
     const { ownedCourses } = useOwnedCourses(courses, account.data)
+
+    const [isNewPurchase, setIsNewPurchase] = useState(true)
 
     const purchaseCourse = async order => {
 
@@ -103,7 +105,10 @@ export default function Marketplace({ courses }) {
                                                     <div className="ml-1">
                                                         <Button
                                                             size="sm"
-                                                            onClick={() => { alert("Reactivating") }}
+                                                            onClick={() => {
+                                                                setIsNewPurchase(false)
+                                                                setSelectedCourse(course)
+                                                            }}
                                                             variant="purple"
                                                             disabled={false}
                                                         >
@@ -137,8 +142,14 @@ export default function Marketplace({ courses }) {
             {selectedCourse &&
                 <OrderModal
                     course={selectedCourse}
+                    isNewPurchase={isNewPurchase}
                     onSubmit={purchaseCourse}
-                    onClose={() => setSelectedCourse(null)} />}
+                    onClose={() => {
+                        setSelectedCourse(null)
+                        setIsNewPurchase(true)
+                    }}
+                />
+            }
         </>
     )
 }
