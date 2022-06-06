@@ -6,7 +6,7 @@ const SIZE = {
 
 export default function Button({
     children,
-    className = "text-white bg-indigo-600 hover:bg-indigo-700",
+    className,
     size = "md",
     hoverable = true,
     variant = "purple",

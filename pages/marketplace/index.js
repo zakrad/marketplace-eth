@@ -81,7 +81,7 @@ export default function Marketplace({ courses }) {
                                 }
                                 if (!ownedCourses.hasInitialResponse) {
                                     return (
-                                        <div style={{ height: "50px" }} />
+                                        <div style={{ height: "42px" }} />
                                     )
                                 }
 
@@ -89,24 +89,27 @@ export default function Marketplace({ courses }) {
                                 if (owned) {
                                     return (
                                         <>
-                                            <div>
+                                            <div className="flex">
                                                 <Button
+                                                    onClick={() => alert("You are owner of this course")}
                                                     size="sm"
-                                                    variant="green"
-                                                    disabled={true}
+                                                    variant="white"
+                                                    disabled={false}
                                                 >
-                                                    Owned
+                                                    Yours &#10004;
                                                 </Button>
                                                 {
                                                     owned.state === "deactivated" &&
-                                                    <Button
-                                                        size="sm"
-                                                        onClick={() => { alert("Reactivating") }}
-                                                        variant="purple"
-                                                        disabled={false}
-                                                    >
-                                                        Fund to Activate
-                                                    </Button>
+                                                    <div className="ml-1">
+                                                        <Button
+                                                            size="sm"
+                                                            onClick={() => { alert("Reactivating") }}
+                                                            variant="purple"
+                                                            disabled={false}
+                                                        >
+                                                            Fund to Activate
+                                                        </Button>
+                                                    </div>
                                                 }
                                             </div>
 
