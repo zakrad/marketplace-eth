@@ -48,96 +48,82 @@ export default function Marketplace({ courses }) {
             <MarketHeader />
             <CourseList
                 courses={courses} >
-                {
-                    course => <CourseCard
-                        key={course.id}
-                        course={course}
-                        disabled={!hasConnectedWallet}
-                        Footer={() => {
-                            if (requireInstall) {
-                                return (
-                                    <Button
-                                        variant="lightPurple"
-                                        disabled={true}
-                                    >
-                                        Install
-                                    </Button>
-                                )
-                            }
-                            if (isConnecting) {
-                                return (
-                                    <Button
-                                        variant="lightPurple"
-                                        disabled={true}
-                                    >
-                                        <Loader size="sm" />
-                                    </Button>
-                                )
-                            }
-                            if (!ownedCourses.hasInitialResponse) {
-                                return (
-                                    <div style={{ height: "50px" }} />
-                                )
-                            }
-                            const owned = ownedCourses.lookup[course.id]
+                {course => {
+                    const owned = ownedCourses.lookup[course.id]
+                    return (
+                        <CourseCard
+                            key={course.id}
+                            course={course}
+                            state={owned?.state}
+                            disabled={!hasConnectedWallet}
+                            Footer={() => {
+                                if (requireInstall) {
+                                    return (
+                                        <Button
+                                            variant="lightPurple"
+                                            disabled={true}
+                                        >
+                                            Install
+                                        </Button>
+                                    )
+                                }
+                                if (isConnecting) {
+                                    return (
+                                        <Button
+                                            variant="lightPurple"
+                                            disabled={true}
+                                        >
+                                            <Loader size="sm" />
+                                        </Button>
+                                    )
+                                }
+                                if (!ownedCourses.hasInitialResponse) {
+                                    return (
+                                        <div style={{ height: "50px" }} />
+                                    )
+                                }
 
-                            if (owned) {
-                                return (
-                                    <>
-                                        <div>
-                                            <Button
-                                                variant="green"
-                                                disabled={true}
-                                            >
-                                                Owned
-                                            </Button>
-                                            {
-                                                owned.state === "deactivated" &&
+
+                                if (owned) {
+                                    return (
+                                        <>
+                                            <div>
                                                 <Button
-                                                    onClick={() => { alert("Reactivating") }}
-                                                    variant="purple"
-                                                    disabled={false}
+                                                    variant="green"
+                                                    disabled={true}
                                                 >
-                                                    Fund to Activate
+                                                    Owned
                                                 </Button>
-                                            }
-                                        </div>
-                                        <div className="mt-1">
-                                            {
-                                                owned.state === "activated" &&
-                                                <Message size="sm">
-                                                    Activated
-                                                </Message>
-                                            }
-                                            {
-                                                owned.state === "deactivated" &&
-                                                <Message type="danger" size="sm">
-                                                    Deactivated
-                                                </Message>
-                                            }
-                                            {
-                                                owned.state === "purchased" &&
-                                                <Message type="warning" size="sm">
-                                                    Waiting for activation
-                                                </Message>
-                                            }
-                                        </div>
-                                    </>
+                                                {
+                                                    owned.state === "deactivated" &&
+                                                    <Button
+                                                        onClick={() => { alert("Reactivating") }}
+                                                        variant="purple"
+                                                        disabled={false}
+                                                    >
+                                                        Fund to Activate
+                                                    </Button>
+                                                }
+                                            </div>
+
+                                        </>
+                                    )
+                                }
+
+                                return (
+                                    <Button
+                                        variant="lightPurple"
+                                        onClick={() => setSelectedCourse(course)}
+                                        disabled={!hasConnectedWallet}
+                                    >
+                                        Purchase
+                                    </Button>
                                 )
                             }
 
-                            return (
-                                <Button
-                                    variant="lightPurple"
-                                    onClick={() => setSelectedCourse(course)}
-                                    disabled={!hasConnectedWallet}
-                                >
-                                    Purchase
-                                </Button>
-                            )
-                        }
-
-                        } />
+                            } />
+                    )
+                }
                 }
             </CourseList>
             {selectedCourse &&
