@@ -78,6 +78,9 @@ export default function ManagedCourses() {
     }
 
     const searchCourse = courseHash => {
+        if (!courseHash) {
+            return
+        }
         alert(courseHash)
     }
 
