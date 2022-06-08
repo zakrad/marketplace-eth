@@ -1,3 +1,4 @@
+const HDWalletProvider = require("@truffle/hdwallet-provider")
 
 module.exports = {
   contracts_build_directory: "./public/contracts",
@@ -7,6 +8,21 @@ module.exports = {
       port: 7545,            // Standard Ethereum port (default: none)
       network_id: "*",       // Any network (default: none)
     },
+    ropsten: {
+      provider: () =>
+        new HDWalletProvider({
+          mnemonic: {
+            phrase: ""
+          },
+          providerOrUrl: "https://ropsten.infura.io/v3/YOUR-PROJECT-ID",
+          addressIndex: 0
+        }),
+      network_id: 3,
+      gas: 5500000, //Gas limit, how much gas we ware willing to spend
+      gasPrice: 20000000000,//How much we are willing to spend for unit of gas
+      confirmations: 2, // number of blocks to wait between deployment
+      timeoutBlocks: 200, //number of blocks before deployment times out
+    }
   },
   // Configure your compilers
   compilers: {
