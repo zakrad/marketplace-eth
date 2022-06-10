@@ -74,6 +74,15 @@ export default function Marketplace({ courses }) {
             const result = await contract.methods.repurchaseCourse(
                 courseHash
             ).send({ from: account.data, value })
+
+            const index = ownedCourse.data.findIndex(c => c.id === course.id)
+
+            if (index >= 0) {
+                ownedCourse.data[index].state = "purchased"
+                ownedCourse.mutate(ownedCourses.data)
+            } else {
+                ownedCourse.mutate()
+            }
             ownedCourses.mutate()
             return result
         } catch (error) {
@@ -160,9 +169,15 @@ export default function Marketplace({ courses }) {
                                                                 setSelectedCourse(course)
                                                             }}
                                                             variant="purple"
-                                                            disabled={false}
+                                                            disabled={isBusy}
                                                         >
-                                                            Fund to Activate
+                                                            {isBusy ?
+                                                                <div className="flex">
+                                                                    <Loader size="sm" />
+                                                                    <div className="ml-2">In Progress </div>
+                                                                </div> :
+                                                                <div> Fund to Activate  </div>
+                                                            }
                                                         </Button>
                                                     </div>
                                                 }
