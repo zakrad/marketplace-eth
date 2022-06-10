@@ -31,3 +31,8 @@ module.exports = {
     },
   }
 };
+
+
+// > transaction hash:    0xa48c386b9b9f164e0814bf9d732d59e61928d86d1da019ebb1d6b18723e92d7d
+// > contract address:    0x6efc3B2Aa7eB646d629752512cd31Ae786Ffea84
+
