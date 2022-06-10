@@ -18,8 +18,8 @@ module.exports = {
           addressIndex: 0
         }),
       network_id: 3,
-      gas: 5500000, //Gas limit, how much gas we ware willing to spend
-      gasPrice: 20000000000,//How much we are willing to spend for unit of gas
+      gas: 1500000, //Gas limit, how much gas we ware willing to spend
+      gasPrice: 7000000000,//How much we are willing to spend for unit of gas
       confirmations: 2, // number of blocks to wait between deployment
       timeoutBlocks: 200, //number of blocks before deployment times out
     }
@@ -33,6 +33,5 @@ module.exports = {
 };
 
 
-// > transaction hash:    0xa48c386b9b9f164e0814bf9d732d59e61928d86d1da019ebb1d6b18723e92d7d
-// > contract address:    0x6efc3B2Aa7eB646d629752512cd31Ae786Ffea84
-
+// > transaction hash:    0xbb93401d60588565dd11b8f52c4d8d387d7fb0fcc708c3239999b3e7e5666699
+// > contract address:    0xa0DD372fE080a8C6Ee69ae9f54ed916e2Dfab7f5
