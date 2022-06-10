@@ -38,20 +38,28 @@ export default function Marketplace({ courses }) {
                 { type: "bytes32", value: orderHash }
             )
 
-            withToast(_purchaseCourse(hexCourseId, proof, value))
+            withToast(_purchaseCourse({ hexCourseId, proof, value }, course))
         } else {
-            withToast(_repurchaseCourse(orderHash, value))
+            withToast(_repurchaseCourse({ courseHash: orderHash, value }, course))
         }
 
     }
 
-    const _purchaseCourse = async (hexCourseId, proof, value) => {
+    const _purchaseCourse = async ({ hexCourseId, proof, value }, course) => {
         try {
             const result = await contract.methods.purchaseCourse(
                 hexCourseId,
                 proof
             ).send({ from: account.data, value })
-            console.log(result)
+            ownedCourses.mutate([
+                ...ownedCourse.data, {
+                    ...course,
+                    proof,
+                    state: "purchased",
+                    owner: account.data,
+                    price: value
+                }
+            ])
 
             return result
         } catch (error) {
@@ -61,12 +69,12 @@ export default function Marketplace({ courses }) {
         }
     }
 
-    const _repurchaseCourse = async (courseHash, value) => {
+    const _repurchaseCourse = async ({ courseHash, value }, course) => {
         try {
             const result = await contract.methods.repurchaseCourse(
                 courseHash
             ).send({ from: account.data, value })
-
+            ownedCourses.mutate()
             return result
         } catch (error) {
             throw new Error(error.message)
@@ -119,8 +127,8 @@ export default function Marketplace({ courses }) {
                                 if (!ownedCourses.hasInitialResponse) {
                                     return (
                                         <Button
-                                            variant="white"
                                             disabled={true}
+                                            variant="white"
                                             size="sm"
                                         >
                                             Loading State...
@@ -169,7 +177,7 @@ export default function Marketplace({ courses }) {
                                         size="sm"
                                         variant="lightPurple"
                                         onClick={() => setSelectedCourse(course)}
-                                        disabled={!hasConnectedWallet}
+                                        disabled={!hasConnectedWallet || isBusy}
                                     >
                                         {isBusy ?
                                             <div className="flex">

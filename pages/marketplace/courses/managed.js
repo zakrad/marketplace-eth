@@ -7,7 +7,8 @@ import { CourseFilter, ManagedCourseCard } from "@components/ui/course";
 import { BaseLayout } from "@components/ui/layout";
 import { MarketHeader } from "@components/ui/marketplace";
 import { normalizeOwnedCourse } from "@utils/normalize";
-import { useState } from "react";
+import { withToast } from "@utils/toast";
+import { useEffect, useState } from "react";
 
 const VerificationInput = ({ onVerify }) => {
     const [email, setEmail] = useState("")
@@ -45,6 +46,7 @@ export default function ManagedCourses() {
         if (!email) {
             return
         }
+
         const emailHash = web3.utils.sha3(email)
         const proofToCheck = web3.utils.soliditySha3(
             { type: "bytes32", value: emailHash },
@@ -64,31 +66,23 @@ export default function ManagedCourses() {
 
     const changeCourseState = async (courseHash, method) => {
         try {
-            await contract.methods[method](courseHash)
-                .send({ from: account.data })
+            const result = await contract.methods[method](courseHash)
+                .send({
+                    from: account.data
+                })
+
+            return result
         } catch (e) {
-            console.error(e.message)
+            throw new Error(e.message)
         }
     }
 
     const activateCourse = async courseHash => {
-        changeCourseState(courseHash, "activateCourse")
-
+        withToast(changeCourseState(courseHash, "activateCourse"))
     }
-    if (!account.isAdmin) {
-        return null
-    }
-    const filteredCourses = managedCourses.data
-        ?.filter((course) => {
-            if (filters.state === "all") {
-                return true
-            }
-            return course.state === filters.state
-        })
-        .map(course => renderCard(course))
 
     const deactivateCourse = async courseHash => {
-        changeCourseState(courseHash, "deactivateCourse")
+        withToast(changeCourseState(courseHash, "deactivateCourse"))
     }
 
     const searchCourse = async hash => {
@@ -111,8 +105,8 @@ export default function ManagedCourses() {
         return (
             <ManagedCourseCard
                 key={course.ownedCourseId}
-                course={course}
                 isSearched={isSearched}
+                course={course}
             >
                 <VerificationInput
                     onVerify={email => {
@@ -137,7 +131,7 @@ export default function ManagedCourses() {
                     </div>
                 }
                 {course.state === "purchased" &&
-                    <div div className="mt-2">
+                    <div className="mt-2">
                         <Button
                             onClick={() => activateCourse(course.hash)}
                             variant="green">
@@ -150,7 +144,6 @@ export default function ManagedCourses() {
                         </Button>
                     </div>
                 }
-
             </ManagedCourseCard>
         )
     }
@@ -159,16 +152,25 @@ export default function ManagedCourses() {
         return null
     }
 
+    const filteredCourses = managedCourses.data
+        ?.filter((course) => {
+            if (filters.state === "all") {
+                return true
+            }
+
+            return course.state === filters.state
+        })
+        .map(course => renderCard(course))
+
     return (
         <>
             <MarketHeader />
             <CourseFilter
-                onFilterSelect={value => setFilters({ state: value })}
+                onFilterSelect={(value) => setFilters({ state: value })}
                 onSearchSubmit={searchCourse}
             />
             <section className="grid grid-cols-1">
-                {
-                    searchedCourse &&
+                {searchedCourse &&
                     <div>
                         <h1 className="text-2xl font-bold p-5">Search</h1>
                         {renderCard(searchedCourse, true)}
@@ -177,9 +179,10 @@ export default function ManagedCourses() {
                 <h1 className="text-2xl font-bold p-5">All Courses</h1>
                 {filteredCourses}
                 {filteredCourses?.length === 0 &&
-                    <Message>
-                        No Courses to display
-                    </Message>}
+                    <Message type="warning">
+                        No courses to display
+                    </Message>
+                }
             </section>
         </>
     )
