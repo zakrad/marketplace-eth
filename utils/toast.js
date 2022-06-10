@@ -29,6 +29,7 @@ export const withToast = (promise) => {
                                 Has been successfuly processed.
                             </p>
                             <a
+                                rel="noreferrer"
                                 href={`https://ropsten.etherscan.io/tx/${data.transactionHash}`}
                                 target="_blank"
                             >
