@@ -1,14 +1,15 @@
-import { CourseList, CourseCard } from "@components/ui/course"
+
+
+import { CourseCard, CourseList } from "@components/ui/course"
 import { BaseLayout } from "@components/ui/layout"
 import { getAllCourses } from "@content/courses/fetcher"
 import { useOwnedCourses, useWalletInfo } from "@components/hooks/web3"
+import { Button, Loader, Message } from "@components/ui/common"
 import { OrderModal } from "@components/ui/order"
 import { useState } from "react"
 import { MarketHeader } from "@components/ui/marketplace"
-import { Button, Loader } from "@components/ui/common"
 import { useWeb3 } from "@components/providers"
 import { withToast } from "@utils/toast"
-
 
 export default function Marketplace({ courses }) {
     const { web3, contract, requireInstall } = useWeb3()
@@ -20,7 +21,6 @@ export default function Marketplace({ courses }) {
     const [isNewPurchase, setIsNewPurchase] = useState(true)
 
     const purchaseCourse = async (order, course) => {
-
         const hexCourseId = web3.utils.utf8ToHex(course.id)
         const orderHash = web3.utils.soliditySha3(
             { type: "bytes16", value: hexCourseId },
@@ -30,7 +30,6 @@ export default function Marketplace({ courses }) {
         const value = web3.utils.toWei(String(order.price))
 
         setBusyCourseId(course.id)
-
         if (isNewPurchase) {
             const emailHash = web3.utils.sha3(order.email)
             const proof = web3.utils.soliditySha3(
@@ -42,7 +41,6 @@ export default function Marketplace({ courses }) {
         } else {
             withToast(_repurchaseCourse({ courseHash: orderHash, value }, course))
         }
-
     }
 
     const _purchaseCourse = async ({ hexCourseId, proof, value }, course) => {
@@ -51,8 +49,9 @@ export default function Marketplace({ courses }) {
                 hexCourseId,
                 proof
             ).send({ from: account.data, value })
+
             ownedCourses.mutate([
-                ...ownedCourse.data, {
+                ...ownedCourses.data, {
                     ...course,
                     proof,
                     state: "purchased",
@@ -60,7 +59,6 @@ export default function Marketplace({ courses }) {
                     price: value
                 }
             ])
-
             return result
         } catch (error) {
             throw new Error(error.message)
@@ -75,15 +73,15 @@ export default function Marketplace({ courses }) {
                 courseHash
             ).send({ from: account.data, value })
 
-            const index = ownedCourse.data.findIndex(c => c.id === course.id)
+            const index = ownedCourses.data.findIndex(c => c.id === course.id)
 
             if (index >= 0) {
-                ownedCourse.data[index].state = "purchased"
-                ownedCourse.mutate(ownedCourses.data)
+                ownedCourses.data[index].state = "purchased"
+                ownedCourses.mutate(ownedCourses.data)
             } else {
-                ownedCourse.mutate()
+                ownedCourses.mutate()
+
             }
-            ownedCourses.mutate()
             return result
         } catch (error) {
             throw new Error(error.message)
@@ -101,7 +99,8 @@ export default function Marketplace({ courses }) {
         <>
             <MarketHeader />
             <CourseList
-                courses={courses} >
+                courses={courses}
+            >
                 {course => {
                     const owned = ownedCourses.lookup[course.id]
                     return (
@@ -115,97 +114,95 @@ export default function Marketplace({ courses }) {
                                     return (
                                         <Button
                                             size="sm"
-                                            variant="lightPurple"
                                             disabled={true}
-                                        >
+                                            variant="lightPurple">
                                             Install
                                         </Button>
                                     )
                                 }
+
                                 if (isConnecting) {
                                     return (
                                         <Button
                                             size="sm"
-                                            variant="lightPurple"
                                             disabled={true}
-                                        >
+                                            variant="lightPurple">
                                             <Loader size="sm" />
                                         </Button>
                                     )
                                 }
+
                                 if (!ownedCourses.hasInitialResponse) {
                                     return (
+                                        // <div style={{height: "42px"}}></div>
                                         <Button
-                                            disabled={true}
                                             variant="white"
-                                            size="sm"
-                                        >
-                                            Loading State...
+                                            disabled={true}
+                                            size="sm">
+                                            {hasConnectedWallet ?
+                                                "Loading State..." :
+                                                "Connect"
+                                            }
                                         </Button>
                                     )
                                 }
 
                                 const isBusy = busyCourseId === course.id
-
                                 if (owned) {
                                     return (
                                         <>
                                             <div className="flex">
                                                 <Button
-                                                    onClick={() => alert("You are owner of this course")}
-                                                    size="sm"
-                                                    variant="white"
+                                                    onClick={() => alert("You are owner of this course.")}
                                                     disabled={false}
-                                                >
+                                                    size="sm"
+                                                    variant="white">
                                                     Yours &#10004;
                                                 </Button>
-                                                {
-                                                    owned.state === "deactivated" &&
+                                                {owned.state === "deactivated" &&
                                                     <div className="ml-1">
                                                         <Button
                                                             size="sm"
+                                                            disabled={isBusy}
                                                             onClick={() => {
                                                                 setIsNewPurchase(false)
                                                                 setSelectedCourse(course)
                                                             }}
-                                                            variant="purple"
-                                                            disabled={isBusy}
-                                                        >
+                                                            variant="purple">
                                                             {isBusy ?
                                                                 <div className="flex">
                                                                     <Loader size="sm" />
-                                                                    <div className="ml-2">In Progress </div>
+                                                                    <div className="ml-2">In Progress</div>
                                                                 </div> :
-                                                                <div> Fund to Activate  </div>
+                                                                <div>Fund to Activate</div>
                                                             }
                                                         </Button>
                                                     </div>
                                                 }
                                             </div>
-
                                         </>
                                     )
                                 }
 
+
                                 return (
                                     <Button
-                                        size="sm"
-                                        variant="lightPurple"
                                         onClick={() => setSelectedCourse(course)}
+                                        size="sm"
                                         disabled={!hasConnectedWallet || isBusy}
-                                    >
+                                        variant="lightPurple">
                                         {isBusy ?
                                             <div className="flex">
                                                 <Loader size="sm" />
-                                                <div className="ml-2">In Progress </div>
+                                                <div className="ml-2">In Progress</div>
                                             </div> :
-                                            <div> Purchase  </div>
+                                            <div>Purchase</div>
                                         }
                                     </Button>
                                 )
                             }
-
-                            } />
+                            }
+                        />
                     )
                 }
                 }

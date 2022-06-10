@@ -17,7 +17,6 @@ export const withToast = (promise) => {
                         </div>
                     )
                 },
-                icon: false,
             },
             success: {
                 render({ data }) {
@@ -40,8 +39,6 @@ export const withToast = (promise) => {
                         </div>
                     )
                 },
-                // other options
-                icon: "🟢",
             },
             error: {
                 render({ data }) {
