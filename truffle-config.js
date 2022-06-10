@@ -1,5 +1,5 @@
 const HDWalletProvider = require("@truffle/hdwallet-provider")
-
+const keys = require("./keys.json")
 module.exports = {
   contracts_build_directory: "./public/contracts",
   networks: {
@@ -14,7 +14,7 @@ module.exports = {
           mnemonic: {
             phrase: ""
           },
-          providerOrUrl: "https://ropsten.infura.io/v3/YOUR-PROJECT-ID",
+          providerOrUrl: `https://speedy-nodes-nyc.moralis.io/${keys.MORALIS_PROJECT_ID}/eth/ropsten`,
           addressIndex: 0
         }),
       network_id: 3,
