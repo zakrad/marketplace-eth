@@ -12,7 +12,7 @@ module.exports = {
       provider: () =>
         new HDWalletProvider({
           mnemonic: {
-            phrase: ""
+            phrase: keys.MNEMONIC
           },
           providerOrUrl: `https://speedy-nodes-nyc.moralis.io/${keys.MORALIS_PROJECT_ID}/eth/ropsten`,
           addressIndex: 0
